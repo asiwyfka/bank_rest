@@ -12,8 +12,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,30 +22,31 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "CARDS")
 public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private final String cardNumber;
+    private String cardNumber;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
-    private final User owner;
+    private User owner;
 
     @Column(nullable = false)
-    private final LocalDate expiryDate;
+    private LocalDate expiryDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private final CardStatus status;
+    private CardStatus status;
 
     @Column(nullable = false)
-    private final BigDecimal balance;
+    private BigDecimal balance;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

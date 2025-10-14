@@ -1,1 +1,7 @@
 com\example\bankcards\BankRestApplication.class
+com\example\bankcards\entity\RoleName.class
+com\example\bankcards\entity\Transaction.class
+com\example\bankcards\entity\CardStatus.class
+com\example\bankcards\entity\User.class
+com\example\bankcards\entity\Card.class
+com\example\bankcards\entity\Role.class

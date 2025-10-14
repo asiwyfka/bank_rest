@@ -9,34 +9,34 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "TRANSACTIONS")
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "from_card_id", nullable = false)
-    private final Card fromCard;
+    private Card fromCard;
 
     @ManyToOne
     @JoinColumn(name = "to_card_id", nullable = false)
-    private final Card toCard;
+    private Card toCard;
 
     @Column(nullable = false)
-    private final BigDecimal amount;
+    private BigDecimal amount;
 
     private LocalDateTime createdAt;
 
