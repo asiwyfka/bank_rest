@@ -55,7 +55,7 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="card_number" type="VARCHAR(32)">
+            <column name="card_number" type="VARCHAR(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="balance" type="DECIMAL(15,2)" defaultValueNumeric="0.00"/>
