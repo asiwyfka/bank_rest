@@ -12,4 +12,5 @@
     <!-- Второй changelog: вставка базовых данных -->
     <include file="changelog-1.1-insert-initial-data.xml" relativeToChangelogFile="true"/>
 
+
 </databaseChangeLog>

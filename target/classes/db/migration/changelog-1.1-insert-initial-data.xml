@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
 
-    <changeSet id="5" author="avdey">
+    <changeSet id="5" author="Viktor Avdeyev">
         <!-- Добавим роли -->
         <insert tableName="roles">
             <column name="id" valueNumeric="1"/>
@@ -22,16 +22,15 @@
             <column name="id" valueNumeric="1"/>
             <column name="username" value="test_user"/>
             <!-- В реальном проекте пароль должен быть хеширован -->
-            <column name="password" value="password123"/>
+            <column name="password" value="$2a$10$N7iMwZk2gfxldF1kmmoGXu1XFd.1vETOcnuMhbUDIEKZ5oKXjrDrW"/>
             <column name="email" value="test_user@example.com"/>
-            <column name="created_at" valueDate="2025-10-14T00:00:00"/>
-        </insert>
-
-        <!-- Связь user -> role -->
-        <insert tableName="user_roles">
-            <column name="user_id" valueNumeric="1"/>
             <column name="role_id" valueNumeric="1"/>
         </insert>
+
+        <sql>
+            SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
+        </sql>
+
     </changeSet>
 
 </databaseChangeLog>
