@@ -3,7 +3,6 @@ package com.example.bankcards.service;
 import com.example.bankcards.dto.UserRequestDto;
 import com.example.bankcards.dto.UserResponseDto;
 import com.example.bankcards.dto.UserUpdateRequestDto;
-import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.RoleNotFoundException;
 import com.example.bankcards.exception.UserNotFoundException;
@@ -31,19 +30,19 @@ public class UserService {
     }
 
     public UserResponseDto getUserById(Long id) {
-        User user = userRepository.findById(id)
+        var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return toDto(user);
     }
 
     public UserResponseDto createUser(UserRequestDto dto) {
-        User user = new User();
+        var user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         if (dto.getRoleId() != null) {
-            Role role = roleRepository.findById(dto.getRoleId())
+            var role = roleRepository.findById(dto.getRoleId())
                     .orElseThrow(() -> new RoleNotFoundException(dto.getRoleId()));
             user.setRole(role);
         }
@@ -52,7 +51,7 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long id, UserUpdateRequestDto dto) {
-        User user = userRepository.findById(id)
+        var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         if (dto.getUsername() != null) user.setUsername(dto.getUsername());
@@ -61,7 +60,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         if (dto.getRoleId() != null) {
-            Role role = roleRepository.findById(dto.getRoleId())
+            var role = roleRepository.findById(dto.getRoleId())
                     .orElseThrow(() -> new RoleNotFoundException(dto.getRoleId()));
             user.setRole(role);
         }

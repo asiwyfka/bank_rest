@@ -60,7 +60,7 @@ class UserServiceTest {
     @Test
     void getUserById_success() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        UserResponseDto dto = userService.getUserById(1L);
+        var dto = userService.getUserById(1L);
         assertEquals("testuser", dto.getUsername());
     }
 
@@ -72,7 +72,7 @@ class UserServiceTest {
 
     @Test
     void createUser_withRole() {
-        UserRequestDto dto = new UserRequestDto();
+        var dto = new UserRequestDto();
         dto.setUsername("newuser");
         dto.setEmail("new@test.com");
         dto.setPassword("pass");
@@ -82,7 +82,7 @@ class UserServiceTest {
         when(passwordEncoder.encode("pass")).thenReturn("encodedPass");
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        UserResponseDto response = userService.createUser(dto);
+        var response = userService.createUser(dto);
 
         assertEquals("newuser", response.getUsername());
         assertEquals("ROLE_USER", response.getRoleName());
@@ -90,7 +90,7 @@ class UserServiceTest {
 
     @Test
     void updateUser_notFound() {
-        UserUpdateRequestDto dto = new UserUpdateRequestDto();
+        var dto = new UserUpdateRequestDto();
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
         assertThrows(UserNotFoundException.class, () -> userService.updateUser(2L, dto));
     }

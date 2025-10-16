@@ -18,11 +18,10 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
-    // Генерация токена
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
+        var username = authentication.getName();
+        var now = new Date();
+        var expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
                 .setSubject(username)
@@ -32,7 +31,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Получение username из токена
     public String getUsernameFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -41,7 +39,6 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    // Валидация токена
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);

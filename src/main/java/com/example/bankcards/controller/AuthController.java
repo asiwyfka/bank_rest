@@ -30,7 +30,7 @@ public class AuthController {
     @Operation(summary = "Залогиниться пользователем")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto userDto) {
-        String token = authService.login(userDto);
+        var token = authService.login(userDto);
         return ResponseEntity.ok(token);
     }
 }

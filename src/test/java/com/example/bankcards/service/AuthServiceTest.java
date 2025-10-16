@@ -47,7 +47,7 @@ class AuthServiceTest {
 
     @Test
     void register_success() {
-        RegisterRequestDto dto = new RegisterRequestDto();
+        var dto = new RegisterRequestDto();
         dto.setUsername("test");
         dto.setEmail("test@test.com");
         dto.setPassword("password");
@@ -55,13 +55,13 @@ class AuthServiceTest {
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(userRepository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
 
-        Role role = new Role();
+        var role = new Role();
         role.setName(ROLE_USER);
         when(roleRepository.findByName(ROLE_USER)).thenReturn(Optional.of(role));
 
         when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPassword");
 
-        String result = authService.register(dto);
+        var result = authService.register(dto);
 
         assertEquals("Пользователь успешно зарегестрирован с ролью ROLE_USER", result);
         verify(userRepository).save(any(User.class));
@@ -69,7 +69,7 @@ class AuthServiceTest {
 
     @Test
     void register_emailExists_shouldThrow() {
-        RegisterRequestDto dto = new RegisterRequestDto();
+        var dto = new RegisterRequestDto();
         dto.setEmail("exists@test.com");
         dto.setUsername("user");
 
@@ -80,7 +80,7 @@ class AuthServiceTest {
 
     @Test
     void register_usernameExists_shouldThrow() {
-        RegisterRequestDto dto = new RegisterRequestDto();
+        var dto = new RegisterRequestDto();
         dto.setEmail("new@test.com");
         dto.setUsername("exists");
 
@@ -92,7 +92,7 @@ class AuthServiceTest {
 
     @Test
     void register_roleNotFound_shouldThrow() {
-        RegisterRequestDto dto = new RegisterRequestDto();
+        var dto = new RegisterRequestDto();
         dto.setEmail("new@test.com");
         dto.setUsername("new");
         dto.setPassword("pass");
@@ -106,7 +106,7 @@ class AuthServiceTest {
 
     @Test
     void login_success() {
-        LoginRequestDto dto = new LoginRequestDto();
+        var dto = new LoginRequestDto();
         dto.setUsername("user");
         dto.setPassword("pass");
 
@@ -115,7 +115,7 @@ class AuthServiceTest {
                 .thenReturn(auth);
         when(jwtTokenProvider.generateToken(auth)).thenReturn("token123");
 
-        String token = authService.login(dto);
+        var token = authService.login(dto);
 
         assertEquals("token123", token);
     }

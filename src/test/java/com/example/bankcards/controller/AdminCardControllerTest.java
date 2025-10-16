@@ -49,7 +49,7 @@ class AdminCardControllerTest {
 
     @Test
     void getAllCards_success() throws Exception {
-        CardResponseDto card = new CardResponseDto();
+        var card = new CardResponseDto();
         card.setId(1L);
         card.setMaskedNumber("**** **** **** 1234");
         card.setOwnerId(1L);
@@ -67,16 +67,15 @@ class AdminCardControllerTest {
 
     @Test
     void createCard_success() throws Exception {
-        // Используем уникальный номер карты
-        String uniqueCardNumber = "1234567887654321";
+        var uniqueCardNumber = "1234567887654321";
 
-        CardRequestDto request = new CardRequestDto();
+        var request = new CardRequestDto();
         request.setCardNumber(uniqueCardNumber);
         request.setOwnerId(1L);
         request.setBalance(BigDecimal.valueOf(500));
         request.setExpiryDate(LocalDate.of(2028, 10, 15));
 
-        CardResponseDto response = new CardResponseDto();
+        var response = new CardResponseDto();
         response.setId(1L);
         response.setMaskedNumber("**** **** **** 4321");
         response.setOwnerId(1L);

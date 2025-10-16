@@ -3,7 +3,6 @@ package com.example.bankcards.service;
 import com.example.bankcards.dto.CardRequestDto;
 import com.example.bankcards.dto.CardResponseDto;
 import com.example.bankcards.entity.Card;
-import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.CardNotFoundException;
 import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.CardRepository;
@@ -42,7 +41,7 @@ public class CardService {
      * @return страница карт пользователя
      */
     public Page<CardResponseDto> getUserCards(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username)
+        var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
         return cardRepository.findByOwner(user, pageable)
@@ -60,7 +59,7 @@ public class CardService {
      */
     @Transactional
     public void requestCardBlock(Long cardId, String username) {
-        Card card = cardRepository.findById(cardId)
+        var card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardNotFoundException(cardId));
 
         if (!card.getOwner().getUsername().equals(username)) {
@@ -88,8 +87,8 @@ public class CardService {
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Сумма перевода должна быть положительной");
 
-        Card from = getOwnedCard(fromCardId, username);
-        Card to = getOwnedCard(toCardId, username);
+        var from = getOwnedCard(fromCardId, username);
+        var to = getOwnedCard(toCardId, username);
 
         if (from.getStatus() == BLOCKED || to.getStatus() == BLOCKED)
             throw new IllegalStateException("Одна из карт заблокирована");
@@ -144,10 +143,10 @@ public class CardService {
      * @return созданная карта
      */
     public CardResponseDto createCard(CardRequestDto cardDto) {
-        User owner = userRepository.findById(cardDto.getOwnerId())
+        var owner = userRepository.findById(cardDto.getOwnerId())
                 .orElseThrow(() -> new UserNotFoundException(cardDto.getOwnerId()));
 
-        Card card = new Card();
+        var card = new Card();
         card.setCardNumber(cardDto.getCardNumber());
         card.setOwner(owner);
         card.setExpiryDate(cardDto.getExpiryDate());
@@ -165,7 +164,7 @@ public class CardService {
      * @return обновлённая карта
      */
     public CardResponseDto updateCard(Long id, CardRequestDto cardDto) {
-        Card card = cardRepository.findById(id)
+        var card = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
 
         if (cardDto.getCardNumber() != null) card.setCardNumber(cardDto.getCardNumber());
@@ -182,7 +181,7 @@ public class CardService {
      * @return обновлённая карта со статусом {@code BLOCKED}
      */
     public CardResponseDto blockCard(Long id) {
-        Card card = cardRepository.findById(id)
+        var card = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
         card.setStatus(BLOCKED);
         return toDto(cardRepository.save(card));
@@ -195,7 +194,7 @@ public class CardService {
      * @return обновлённая карта со статусом {@code ACTIVE}
      */
     public CardResponseDto activateCard(Long id) {
-        Card card = cardRepository.findById(id)
+        var card = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
         card.setStatus(ACTIVE);
         return toDto(cardRepository.save(card));
@@ -220,7 +219,7 @@ public class CardService {
      * @return карта, принадлежащая пользователю
      */
     private Card getOwnedCard(Long cardId, String username) {
-        User user = userRepository.findByUsername(username)
+        var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
         return cardRepository.findById(cardId)

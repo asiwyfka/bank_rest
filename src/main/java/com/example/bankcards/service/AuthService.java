@@ -9,7 +9,6 @@ import com.example.bankcards.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,13 +52,11 @@ public class AuthService {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        // Создаём сущность User на основе DTO
-        User user = new User();
+        var user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        // Назначаем роль на сущность User, а не на DTO
         var userRole = roleRepository.findByName(ROLE_USER)
                 .orElseThrow(() -> new RoleNotFoundException(ROLE_USER.name()));
         user.setRole(userRole);
@@ -77,7 +74,7 @@ public class AuthService {
      * @return сгенерированный JWT-токен для дальнейшей авторизации
      */
     public String login(LoginRequestDto userDto) {
-        Authentication authentication = authenticationManager.authenticate(
+        var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())
         );
         return jwtTokenProvider.generateToken(authentication);

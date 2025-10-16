@@ -6,7 +6,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
 
-    <!-- 1. roles -->
     <changeSet id="1" author="Viktor Avdeyev">
         <createTable tableName="roles">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -18,7 +17,6 @@
         </createTable>
     </changeSet>
 
-    <!-- 2. users and user_roles (user_roles will get composite PK + FKs) -->
     <changeSet id="2" author="Viktor Avdeyev">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -49,7 +47,6 @@
                                  onDelete="SET NULL"/>
     </changeSet>
 
-    <!-- 3. cards -->
     <changeSet id="3" author="Viktor Avdeyev">
         <createTable tableName="cards">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -66,7 +63,6 @@
             <column name="updated_at" type="TIMESTAMP"/>
         </createTable>
 
-        <!-- FK для cards -->
         <addForeignKeyConstraint baseTableName="cards"
                                  baseColumnNames="user_id"
                                  constraintName="fk_cards_user"
@@ -75,7 +71,6 @@
                                  onDelete="SET NULL"/>
     </changeSet>
 
-    <!-- 4. transactions -->
     <changeSet id="4" author="Viktor Avdeyev">
         <createTable tableName="transactions">
             <column name="id" type="BIGINT" autoIncrement="true">

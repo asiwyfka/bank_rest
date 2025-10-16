@@ -3,7 +3,6 @@ package com.example.bankcards.controller;
 import com.example.bankcards.dto.UserRequestDto;
 import com.example.bankcards.dto.UserResponseDto;
 import com.example.bankcards.dto.UserUpdateRequestDto;
-import com.example.bankcards.entity.User;
 import com.example.bankcards.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

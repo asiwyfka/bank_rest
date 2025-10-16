@@ -7,7 +7,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
 
     <changeSet id="5" author="Viktor Avdeyev">
-        <!-- Добавим роли -->
         <insert tableName="roles">
             <column name="id" valueNumeric="1"/>
             <column name="name" value="ROLE_USER"/>
@@ -17,17 +16,14 @@
             <column name="name" value="ROLE_ADMIN"/>
         </insert>
 
-        <!-- Добавим тестового пользователя -->
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="username" value="admin"/>
-            <!-- В реальном проекте пароль должен быть хеширован -->
             <column name="password" value="$2a$10$N7iMwZk2gfxldF1kmmoGXu1XFd.1vETOcnuMhbUDIEKZ5oKXjrDrW"/>
             <column name="email" value="admin@example.com"/>
             <column name="role_id" valueNumeric="2"/>
         </insert>
 
-        <!-- Обновим последовательности для корректного автогенерации ID -->
         <sql>
             SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
         </sql>

@@ -1,6 +1,5 @@
 package com.example.bankcards.security;
 
-import com.example.bankcards.entity.User;
 import com.example.bankcards.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -19,11 +18,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Ищем пользователя по username
-        User user = userRepository.findByUsername(username)
+        var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        // Преобразуем в Spring Security UserDetails через builder
         return builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

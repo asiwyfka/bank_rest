@@ -80,25 +80,25 @@ class CardServiceTest {
 
     @Test
     void transfer_success() {
-        Card card2 = new Card();
-        card2.setId(2L);
-        card2.setOwner(user);
-        card2.setBalance(BigDecimal.valueOf(500));
-        card2.setStatus(CardStatus.ACTIVE);
+        var card = new Card();
+        card.setId(2L);
+        card.setOwner(user);
+        card.setBalance(BigDecimal.valueOf(500));
+        card.setStatus(CardStatus.ACTIVE);
 
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
-        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
-        when(cardRepository.findById(2L)).thenReturn(Optional.of(card2));
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(this.card));
+        when(cardRepository.findById(2L)).thenReturn(Optional.of(card));
 
         cardService.transfer(1L, 2L, BigDecimal.valueOf(200), "testuser");
 
-        assertEquals(BigDecimal.valueOf(800), card.getBalance());
-        assertEquals(BigDecimal.valueOf(700), card2.getBalance());
+        assertEquals(BigDecimal.valueOf(800), this.card.getBalance());
+        assertEquals(BigDecimal.valueOf(700), card.getBalance());
     }
 
     @Test
     void createCard_success() {
-        CardRequestDto dto = new CardRequestDto();
+        var dto = new CardRequestDto();
         dto.setCardNumber("8765432187654321");
         dto.setOwnerId(user.getId());
         dto.setBalance(BigDecimal.valueOf(300));
@@ -106,7 +106,7 @@ class CardServiceTest {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(cardRepository.save(any(Card.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        CardResponseDto response = cardService.createCard(dto);
+        var response = cardService.createCard(dto);
 
         assertEquals("**** **** **** 4321", response.getMaskedNumber());
         assertEquals(CardStatus.ACTIVE, response.getStatus());
