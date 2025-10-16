@@ -11,8 +11,6 @@ com\example\bankcards\entity\User.class
 com\example\bankcards\repository\CardRepository.class
 com\example\bankcards\dto\LoginRequestDto.class
 com\example\bankcards\dto\UserResponseDto.class
-com\example\bankcards\entity\Transaction.class
-com\example\bankcards\repository\TransactionRepository.class
 com\example\bankcards\security\CustomUserDetailsService.class
 com\example\bankcards\exception\CardNotFoundException.class
 com\example\bankcards\controller\AdminUserController.class
