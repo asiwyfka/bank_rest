@@ -31,7 +31,7 @@ public class AdminUserController {
         return userService.createUser(user);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
         return userService.updateUser(user);
