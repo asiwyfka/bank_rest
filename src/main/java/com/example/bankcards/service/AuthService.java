@@ -1,5 +1,7 @@
 package com.example.bankcards.service;
 
+import com.example.bankcards.dto.LoginRequest;
+import com.example.bankcards.dto.RegisterRequest;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;
@@ -10,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.example.bankcards.exception.RoleNotFoundException;
 
 import static com.example.bankcards.entity.RoleName.ROLE_USER;
 
@@ -40,11 +44,7 @@ public class AuthService {
      * @param user объект {@link User}, содержащий данные для регистрации
      * @return сообщение об успешной регистрации
      */
-    public String register(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email is required");
-        }
-
+    public String register(RegisterRequest user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
@@ -53,27 +53,32 @@ public class AuthService {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Создаём сущность User на основе DTO
+        User userWithRole = new User();
+        userWithRole.setUsername(user.getUsername());
+        userWithRole.setEmail(user.getEmail());
+        userWithRole.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        // Назначаем роль на сущность User, а не на DTO
         var userRole = roleRepository.findByName(ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Default role ROLE_USER not found"));
-        user.setRole(userRole);
+                .orElseThrow(() -> new RoleNotFoundException(ROLE_USER.name()));
+        userWithRole.setRole(userRole);
 
-        userRepository.save(user);
+        userRepository.save(userWithRole);
 
         return "User registered successfully with role ROLE_USER";
     }
 
     /**
-     * Выполняет аутентификацию пользователя и возвращает JWT-токен при успешном входе.
+     * Выполняет аутентификацию пользователя на основе данных из DTO {@link LoginRequest}
+     * и возвращает JWT-токен при успешном входе.
      *
-     * @param username имя пользователя
-     * @param password пароль пользователя
+     * @param request объект {@link LoginRequest}, содержащий имя пользователя и пароль
      * @return сгенерированный JWT-токен для дальнейшей авторизации
      */
-    public String login(String username, String password) {
+    public String login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
         return jwtTokenProvider.generateToken(authentication);
     }

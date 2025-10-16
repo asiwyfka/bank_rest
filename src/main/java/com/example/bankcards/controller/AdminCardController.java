@@ -5,6 +5,7 @@ import com.example.bankcards.service.CardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,13 +43,13 @@ public class AdminCardController {
 
     @Operation(summary = "Создание карты")
     @PostMapping
-    public Card createCard(@RequestBody Card card) {
+    public Card createCard(@Valid @RequestBody Card card) {
         return cardService.createCard(card);
     }
 
     @Operation(summary = "Обновление карты по id")
     @PatchMapping("/{id}")
-    public Card updateCard(@PathVariable Long id, @RequestBody Card card) {
+    public Card updateCard(@PathVariable Long id, @Valid @RequestBody Card card) {
         card.setId(id);
         return cardService.updateCard(card);
     }
