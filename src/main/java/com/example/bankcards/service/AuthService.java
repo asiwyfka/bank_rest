@@ -1,7 +1,7 @@
 package com.example.bankcards.service;
 
-import com.example.bankcards.dto.LoginRequest;
-import com.example.bankcards.dto.RegisterRequest;
+import com.example.bankcards.dto.LoginRequestDto;
+import com.example.bankcards.dto.RegisterRequestDto;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;
@@ -41,44 +41,44 @@ public class AuthService {
      * Проверяет уникальность email и имени пользователя,
      * хэширует пароль и присваивает роль {@code ROLE_USER}.
      *
-     * @param user объект {@link User}, содержащий данные для регистрации
+     * @param userDto объект {@link User}, содержащий данные для регистрации
      * @return сообщение об успешной регистрации
      */
-    public String register(RegisterRequest user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public String register(RegisterRequestDto userDto) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username already exists");
         }
 
         // Создаём сущность User на основе DTO
-        User userWithRole = new User();
-        userWithRole.setUsername(user.getUsername());
-        userWithRole.setEmail(user.getEmail());
-        userWithRole.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         // Назначаем роль на сущность User, а не на DTO
         var userRole = roleRepository.findByName(ROLE_USER)
                 .orElseThrow(() -> new RoleNotFoundException(ROLE_USER.name()));
-        userWithRole.setRole(userRole);
+        user.setRole(userRole);
 
-        userRepository.save(userWithRole);
+        userRepository.save(user);
 
         return "User registered successfully with role ROLE_USER";
     }
 
     /**
-     * Выполняет аутентификацию пользователя на основе данных из DTO {@link LoginRequest}
+     * Выполняет аутентификацию пользователя на основе данных из DTO {@link LoginRequestDto}
      * и возвращает JWT-токен при успешном входе.
      *
-     * @param request объект {@link LoginRequest}, содержащий имя пользователя и пароль
+     * @param userDto объект {@link LoginRequestDto}, содержащий имя пользователя и пароль
      * @return сгенерированный JWT-токен для дальнейшей авторизации
      */
-    public String login(LoginRequest request) {
+    public String login(LoginRequestDto userDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())
         );
         return jwtTokenProvider.generateToken(authentication);
     }

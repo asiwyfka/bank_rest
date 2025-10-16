@@ -7,13 +7,13 @@ com\example\bankcards\security\JwtAuthFilter.class
 com\example\bankcards\config\OpenApiConfig.class
 com\example\bankcards\config\SecurityConfig.class
 com\example\bankcards\entity\RoleName.class
-com\example\bankcards\dto\LoginRequest.class
 com\example\bankcards\entity\User.class
 com\example\bankcards\repository\CardRepository.class
+com\example\bankcards\dto\LoginRequestDto.class
+com\example\bankcards\dto\UserResponseDto.class
 com\example\bankcards\entity\Transaction.class
 com\example\bankcards\repository\TransactionRepository.class
 com\example\bankcards\security\CustomUserDetailsService.class
-com\example\bankcards\dto\RegisterRequest.class
 com\example\bankcards\exception\CardNotFoundException.class
 com\example\bankcards\controller\AdminUserController.class
 com\example\bankcards\exception\GlobalExceptionHandler.class
@@ -27,5 +27,8 @@ com\example\bankcards\service\UserService.class
 com\example\bankcards\controller\AuthController.class
 com\example\bankcards\controller\UserCardController.class
 com\example\bankcards\entity\CardStatus.class
+com\example\bankcards\dto\UserUpdateRequestDto.class
+com\example\bankcards\dto\RegisterRequestDto.class
+com\example\bankcards\dto\UserRequestDto.class
 com\example\bankcards\entity\Card.class
 com\example\bankcards\repository\UserRepository.class

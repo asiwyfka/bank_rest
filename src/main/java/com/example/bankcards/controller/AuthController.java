@@ -1,7 +1,7 @@
 package com.example.bankcards.controller;
 
-import com.example.bankcards.dto.LoginRequest;
-import com.example.bankcards.dto.RegisterRequest;
+import com.example.bankcards.dto.LoginRequestDto;
+import com.example.bankcards.dto.RegisterRequestDto;
 import com.example.bankcards.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,14 +23,14 @@ public class AuthController {
 
     @Operation(summary = "Регистрация пользователя")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest user) {
-        return ResponseEntity.ok(authService.register(user));
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto userDto) {
+        return ResponseEntity.ok(authService.register(userDto));
     }
 
     @Operation(summary = "Залогиниться пользователем")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        String token = authService.login(request);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto userDto) {
+        String token = authService.login(userDto);
         return ResponseEntity.ok(token);
     }
 }

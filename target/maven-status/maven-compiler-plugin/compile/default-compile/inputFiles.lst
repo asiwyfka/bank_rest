@@ -6,8 +6,11 @@ C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\contro
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\controller\AuthController.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\controller\UserCardController.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\converter\CardNumberEncryptor.java
-C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\LoginRequest.java
-C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\RegisterRequest.java
+C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\LoginRequestDto.java
+C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\RegisterRequestDto.java
+C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\UserRequestDto.java
+C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\UserResponseDto.java
+C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\dto\UserUpdateRequestDto.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity\Card.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity\CardStatus.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity\Role.java

@@ -1,5 +1,8 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.dto.UserRequestDto;
+import com.example.bankcards.dto.UserResponseDto;
+import com.example.bankcards.dto.UserUpdateRequestDto;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,36 +18,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/users")
-@Tag(name = "ADMIN_USER", description = "Функционал работы с держателями карт для администратора")
+@Tag(name = "ADMIN_USER", description = "Функционал работы с пользователями для администратора")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @SecurityRequirement(name = "bearerAuth")
 public class AdminUserController {
+
     private final UserService userService;
 
-    @Operation(summary = "Получения всех пользователей")
+    @Operation(summary = "Получение всех пользователей")
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @Operation(summary = "Получение пользователя по id")
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    public UserResponseDto getUser(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @Operation(summary = "Создание пользователя")
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.createUser(user);
+    public UserResponseDto createUser(@Valid @RequestBody UserRequestDto userDto) {
+        return userService.createUser(userDto);
     }
 
     @Operation(summary = "Обновление данных пользователя по id")
     @PatchMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
-        user.setId(id);
-        return userService.updateUser(user);
+    public UserResponseDto updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequestDto userDto) {
+        return userService.updateUser(id, userDto);
     }
 
     @Operation(summary = "Удаление пользователя по id")

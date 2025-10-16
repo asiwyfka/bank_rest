@@ -1,80 +1,91 @@
 package com.example.bankcards.service;
 
+import com.example.bankcards.dto.UserRequestDto;
+import com.example.bankcards.dto.UserResponseDto;
+import com.example.bankcards.dto.UserUpdateRequestDto;
+import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
+import com.example.bankcards.exception.RoleNotFoundException;
+import com.example.bankcards.exception.UserNotFoundException;
+import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Сервис для управления пользователями системы.
- * <p>
- * Предоставляет операции CRUD над сущностью {@link User}, включая создание, обновление,
- * получение и удаление пользователей. При создании и обновлении пароли кодируются с помощью
- * {@link PasswordEncoder} перед сохранением в базу данных.
- * <p>
- * Использует {@link UserRepository} для взаимодействия с уровнем хранения данных.
- */
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * Возвращает список всех пользователей системы.
-     *
-     * @return список всех пользователей
-     */
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
-    /**
-     * Возвращает пользователя по его идентификатору.
-     *
-     * @param id идентификатор пользователя
-     * @return объект {@link User}, если найден
-     */
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return toDto(user);
     }
 
-    /**
-     * Создает нового пользователя.
-     * <p>
-     * Перед сохранением выполняется шифрование пароля с помощью {@link PasswordEncoder}.
-     *
-     * @param user объект {@link User}, содержащий данные нового пользователя
-     * @return созданный пользователь с присвоенным идентификатором
-     */
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public UserResponseDto createUser(UserRequestDto dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        if (dto.getRoleId() != null) {
+            Role role = roleRepository.findById(dto.getRoleId())
+                    .orElseThrow(() -> new RoleNotFoundException("id=" + dto.getRoleId()));
+            user.setRole(role);
+        }
+
+        return toDto(userRepository.save(user));
     }
 
-    /**
-     * Обновляет данные существующего пользователя.
-     * <p>
-     * Пароль также повторно шифруется перед сохранением.
-     *
-     * @param user объект {@link User} с обновленными данными
-     * @return обновленный пользователь
-     */
-    public User updateUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public UserResponseDto updateUser(Long id, UserUpdateRequestDto dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (dto.getUsername() != null) user.setUsername(dto.getUsername());
+        if (dto.getEmail() != null) user.setEmail(dto.getEmail());
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        if (dto.getRoleId() != null) {
+            Role role = roleRepository.findById(dto.getRoleId())
+                    .orElseThrow(() -> new RoleNotFoundException("id=" + dto.getRoleId()));
+            user.setRole(role);
+        }
+
+        return toDto(userRepository.save(user));
     }
 
-    /**
-     * Удаляет пользователя по его идентификатору.
-     *
-     * @param id идентификатор пользователя
-     */
+    @Transactional
     public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
         userRepository.deleteById(id);
+    }
+
+    public UserResponseDto toDto(User user) {
+        return new UserResponseDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole() != null ? String.valueOf(user.getRole().getName()) : null,
+                user.isEnabled(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }
