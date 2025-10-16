@@ -21,7 +21,7 @@
 
 2. При запуске приложения у нас с помощью миграции создаётся профиль с логином admin, пароль password123, роль ROLE_ADMIN (в бд).
 
-3. Тестируем весь функционал в Swagger или Postman.
+3. Тестируем весь функционал в Swagger или Postman. В браузере при запущенном приложении прописываем http://localhost:8080/swagger-ui/index.html там и дёргаем наши endpoints.
 
 ![swagger](https://github.com/user-attachments/assets/50a1b1b3-5c3f-498f-829d-1555bd563b5d)
 
