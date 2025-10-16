@@ -9,14 +9,14 @@
 
 Пример запуска и проверка работы программы:
 
-1. Прописываем docker-compose up --build тем самым поднимаем свою программу в контейнере:
+1. Прописываем docker-compose up --build, тем самым поднимаем свою программу в контейнере:
 
 ![Запустили приложение в контейнере](https://github.com/user-attachments/assets/b832ef2c-368e-42fc-9bed-360aee4184bc)
 
 Образы на месте:
 ![Образы](https://github.com/user-attachments/assets/29b87500-0f6f-4c6d-aeb5-fff5987531d3)
 
-Сохранение БД при перезапусках Docker тже на месте:
+Сохранение БД при перезапусках Docker тоже на месте:
 ![Volume](https://github.com/user-attachments/assets/c525171c-42a6-47ba-b939-84655a59bed8)
 
 2. При запуске приложения у нас с помощью миграции создаётся профиль с логином admin, пароль password123, роль ROLE_ADMIN (в бд).
