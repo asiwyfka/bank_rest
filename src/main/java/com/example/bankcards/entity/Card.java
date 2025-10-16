@@ -1,7 +1,6 @@
 package com.example.bankcards.entity;
 
 import com.example.bankcards.converter.CardNumberEncryptor;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -48,7 +47,6 @@ public class Card {
     @Pattern(regexp = "\\d{16}", message = "Card number must be 16 digits")
     private String cardNumber;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull(message = "Owner is required")
@@ -83,7 +81,6 @@ public class Card {
         updatedAt = LocalDateTime.now();
     }
 
-    // Маскированный номер для отображения
     @Transient
     public String getMaskedNumber() {
         if (cardNumber == null || cardNumber.length() < 4) return "****";

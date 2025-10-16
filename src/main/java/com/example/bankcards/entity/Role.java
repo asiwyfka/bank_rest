@@ -1,6 +1,5 @@
 package com.example.bankcards.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,6 +33,5 @@ public class Role {
     private RoleName name;
 
     @OneToMany(mappedBy = "role")
-    @JsonManagedReference
     private Set<User> users;
 }

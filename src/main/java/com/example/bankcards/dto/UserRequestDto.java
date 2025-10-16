@@ -1,7 +1,10 @@
 package com.example.bankcards.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +28,8 @@ public class UserRequestDto {
     @Email(message = "Email should be valid")
     private String email;
 
-    private Long roleId; // если админ может назначать роль
+    @NotNull(message = "Role is required")
+    @Min(value = 1, message = "Role must be 1 or 2")
+    @Max(value = 2, message = "Role must be 1 or 2")
+    private Long roleId;
 }

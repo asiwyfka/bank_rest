@@ -25,10 +25,12 @@ com\example\bankcards\converter\CardNumberEncryptor.class
 com\example\bankcards\BankRestApplication.class
 com\example\bankcards\service\UserService.class
 com\example\bankcards\controller\AuthController.class
+com\example\bankcards\dto\CardRequestDto.class
 com\example\bankcards\controller\UserCardController.class
 com\example\bankcards\entity\CardStatus.class
 com\example\bankcards\dto\UserUpdateRequestDto.class
 com\example\bankcards\dto\RegisterRequestDto.class
+com\example\bankcards\dto\CardResponseDto.class
 com\example\bankcards\dto\UserRequestDto.class
 com\example\bankcards\entity\Card.class
 com\example\bankcards\repository\UserRepository.class
