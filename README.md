@@ -19,7 +19,7 @@
 Сохранение БД при перезапусках Docker тоже на месте:
 ![Volume](https://github.com/user-attachments/assets/c525171c-42a6-47ba-b939-84655a59bed8)
 
-2. При запуске приложения у нас с помощью миграции создаётся профиль с логином admin, пароль password123, роль ROLE_ADMIN (в бд).
+2. При запуске приложения у нас с помощью миграции changelog-1.1-insert-initial-data.xml создаётся профиль с логином admin, пароль password123, роль ROLE_ADMIN (в бд).
 
 3. Тестируем весь функционал в Swagger или Postman. В браузере при запущенном приложении прописываем http://localhost:8080/swagger-ui/index.html там и дёргаем наши endpoints.
 
