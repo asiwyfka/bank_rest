@@ -1,7 +1,11 @@
 package com.example.bankcards.service;
 
+import com.example.bankcards.dto.CardRequestDto;
+import com.example.bankcards.dto.CardResponseDto;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.User;
+import com.example.bankcards.exception.CardNotFoundException;
+import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,37 +35,40 @@ public class CardService {
     private final UserRepository userRepository;
 
     /**
-     * Возвращает список карт текущего пользователя с пагинацией.
+     * Возвращает список карт текущего пользователя с поддержкой пагинации.
      *
      * @param username имя пользователя, чьи карты необходимо получить
      * @param pageable параметры пагинации (номер страницы, размер, сортировка)
      * @return страница карт пользователя
      */
-    public Page<Card> getUserCards(String username, Pageable pageable) {
+    public Page<CardResponseDto> getUserCards(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return cardRepository.findByOwner(user, pageable);
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        return cardRepository.findByOwner(user, pageable)
+                .map(this::toDto);
     }
 
     /**
-     * Отправляет запрос на блокировку карты. Меняет статус карты на {@code BLOCK_REQUESTED}.
+     * Отправляет запрос на блокировку карты.
+     * Меняет статус карты на BLOCK_REQUESTED.
      *
      * @param cardId   идентификатор карты
      * @param username имя пользователя, делающего запрос
+     * @throws RuntimeException если карта не найдена, принадлежит другому пользователю,
+     *                          либо уже заблокирована или запрошена блокировка
      */
     @Transactional
     public void requestCardBlock(Long cardId, String username) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new CardNotFoundException(cardId));
 
-        // Проверяем, что карта принадлежит пользователю
         if (!card.getOwner().getUsername().equals(username)) {
-            throw new RuntimeException("You can only request block for your own cards");
+            throw new RuntimeException("Вы можете запросить блокировку только своей карты");
         }
 
-        // Запрещаем повторный запрос, если уже заблокирована или запрос уже есть
         if (card.getStatus() == BLOCKED || card.getStatus() == BLOCK_REQUESTED) {
-            throw new RuntimeException("Card is already blocked or block requested");
+            throw new RuntimeException("Карта уже заблокирована или блокировка запрошена ранее");
         }
 
         card.setStatus(BLOCK_REQUESTED);
@@ -78,18 +85,17 @@ public class CardService {
      */
     @Transactional
     public void transfer(Long fromCardId, Long toCardId, BigDecimal amount, String username) {
-
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
-            throw new IllegalArgumentException("Amount must be positive");
+            throw new IllegalArgumentException("Сумма перевода должна быть положительной");
 
         Card from = getOwnedCard(fromCardId, username);
         Card to = getOwnedCard(toCardId, username);
 
         if (from.getStatus() == BLOCKED || to.getStatus() == BLOCKED)
-            throw new IllegalStateException("One of the cards is blocked");
+            throw new IllegalStateException("Одна из карт заблокирована");
 
         if (from.getBalance().compareTo(amount) < 0)
-            throw new IllegalStateException("Insufficient funds");
+            throw new IllegalStateException("Недостаточно средств на карте отправителя");
 
         from.setBalance(from.getBalance().subtract(amount));
         to.setBalance(to.getBalance().add(amount));
@@ -114,8 +120,10 @@ public class CardService {
      *
      * @return список всех карт
      */
-    public List<Card> getAllCards() {
-        return cardRepository.findAll();
+    public List<CardResponseDto> getAllCards() {
+        return cardRepository.findAll().stream()
+                .map(this::toDto)
+                .toList();
     }
 
     /**
@@ -124,67 +132,88 @@ public class CardService {
      * @param id идентификатор карты
      * @return найденная карта
      */
-    public Card getCardById(Long id) {
-        return cardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+    public CardResponseDto getCardById(Long id) {
+        return toDto(cardRepository.findById(id)
+                .orElseThrow(() -> new CardNotFoundException(id)));
     }
 
     /**
-     * Создает новую карту с активным статусом по умолчанию.
+     * Создаёт новую карту и устанавливает ей статус CardStatus.ACTIVE.
      *
-     * @param card объект карты для сохранения
-     * @return созданная карта с присвоенным идентификатором
+     * @param cardDto данные карты для создания
+     * @return созданная карта
      */
-    public Card createCard(Card card) {
-        card.setStatus(ACTIVE); // по умолчанию активна
-        return cardRepository.save(card);
+    public CardResponseDto createCard(CardRequestDto cardDto) {
+        User owner = userRepository.findById(cardDto.getOwnerId())
+                .orElseThrow(() -> new UserNotFoundException(cardDto.getOwnerId()));
+
+        Card card = new Card();
+        card.setCardNumber(cardDto.getCardNumber());
+        card.setOwner(owner);
+        card.setExpiryDate(cardDto.getExpiryDate());
+        card.setStatus(ACTIVE);
+        card.setBalance(cardDto.getBalance());
+
+        return toDto(cardRepository.save(card));
     }
 
     /**
      * Обновляет данные существующей карты.
      *
-     * @param card обновленный объект карты
-     * @return сохраненная карта
+     * @param id  идентификатор карты
+     * @param cardDto обновлённые данные
+     * @return обновлённая карта
      */
-    public Card updateCard(Card card) {
-        return cardRepository.save(card);
+    public CardResponseDto updateCard(Long id, CardRequestDto cardDto) {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new CardNotFoundException(id));
+
+        if (cardDto.getCardNumber() != null) card.setCardNumber(cardDto.getCardNumber());
+        if (cardDto.getExpiryDate() != null) card.setExpiryDate(cardDto.getExpiryDate());
+        if (cardDto.getBalance() != null) card.setBalance(cardDto.getBalance());
+
+        return toDto(cardRepository.save(card));
     }
 
     /**
-     * Удаляет карту по её идентификатору.
+     * Блокирует карту (для администратора).
+     *
+     * @param id идентификатор карты
+     * @return обновлённая карта со статусом {@code BLOCKED}
+     */
+    public CardResponseDto blockCard(Long id) {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new CardNotFoundException(id));
+        card.setStatus(BLOCKED);
+        return toDto(cardRepository.save(card));
+    }
+
+    /**
+     * Активирует карту (для администратора).
+     *
+     * @param id идентификатор карты
+     * @return обновлённая карта со статусом {@code ACTIVE}
+     */
+    public CardResponseDto activateCard(Long id) {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new CardNotFoundException(id));
+        card.setStatus(ACTIVE);
+        return toDto(cardRepository.save(card));
+    }
+
+    /**
+     * Удаляет карту по идентификатору.
      *
      * @param id идентификатор карты
      */
     public void deleteCard(Long id) {
+        if (!cardRepository.existsById(id))
+            throw new CardNotFoundException(id);
         cardRepository.deleteById(id);
     }
 
     /**
-     * Блокирует карту, устанавливая статус {@code BLOCKED}.
-     *
-     * @param id идентификатор карты
-     * @return обновленная карта
-     */
-    public Card blockCard(Long id) {
-        Card card = getCardById(id);
-        card.setStatus(BLOCKED);
-        return cardRepository.save(card);
-    }
-
-    /**
-     * Активирует карту, устанавливая статус {@code ACTIVE}.
-     *
-     * @param id идентификатор карты
-     * @return обновленная карта
-     */
-    public Card activateCard(Long id) {
-        Card card = getCardById(id);
-        card.setStatus(ACTIVE);
-        return cardRepository.save(card);
-    }
-
-    /**
-     * Вспомогательный метод: возвращает карту, принадлежащую указанному пользователю.
+     * Возвращает карту, принадлежащую указанному пользователю.
      *
      * @param cardId   идентификатор карты
      * @param username имя владельца карты
@@ -192,11 +221,29 @@ public class CardService {
      */
     private Card getOwnedCard(Long cardId, String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(username));
 
         return cardRepository.findById(cardId)
                 .filter(card -> card.getOwner().equals(user))
-                .orElseThrow(() -> new RuntimeException("Card not found or does not belong to user"));
+                .orElseThrow(() -> new CardNotFoundException(cardId));
     }
 
+    /**
+     * Преобразует сущность {@link Card} в DTO {@link CardResponseDto}.
+     *
+     * @param card объект карты
+     * @return DTO карты
+     */
+    private CardResponseDto toDto(Card card) {
+        return new CardResponseDto(
+                card.getId(),
+                card.getMaskedNumber(),
+                card.getOwner().getId(),
+                card.getStatus(),
+                card.getBalance(),
+                card.getExpiryDate(),
+                card.getCreatedAt(),
+                card.getUpdatedAt()
+        );
+    }
 }

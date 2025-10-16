@@ -1,5 +1,6 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.dto.CardResponseDto;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.service.CardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class UserCardController {
 
     @Operation(summary = "Получения всех своих карт пользователя")
     @GetMapping
-    public ResponseEntity<Page<Card>> getUserCards(
+    public ResponseEntity<Page<CardResponseDto>> getUserCards(
             Authentication auth,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -38,7 +39,7 @@ public class UserCardController {
     @PostMapping("/{id}/requestCardBlock")
     public ResponseEntity<?> requestCardBlock(@PathVariable Long id, Authentication auth) {
         cardService.requestCardBlock(id, auth.getName());
-        return ResponseEntity.ok("Сard blocking request sent");
+        return ResponseEntity.ok("Запрос на блокировку карты отправлен");
     }
 
     @Operation(summary = "Перевод денежных средств с одной своей карты на другую свою карту")
@@ -49,7 +50,7 @@ public class UserCardController {
             @RequestParam Long toCardId,
             @RequestParam BigDecimal amount) {
         cardService.transfer(fromCardId, toCardId, amount, auth.getName());
-        return ResponseEntity.ok("Transfer completed successfully");
+        return ResponseEntity.ok("Перевод денежных средств успешно завершён");
     }
 
     @Operation(summary = "Получения баланса своей карты")

@@ -1,5 +1,7 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.dto.CardRequestDto;
+import com.example.bankcards.dto.CardResponseDto;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.service.CardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,27 +33,26 @@ public class AdminCardController {
 
     @Operation(summary = "Получение всех карт")
     @GetMapping
-    public List<Card> getAllCards() {
+    public List<CardResponseDto> getAllCards() {
         return cardService.getAllCards();
     }
 
     @Operation(summary = "Получение карты по id")
     @GetMapping("/{id}")
-    public Card getCard(@PathVariable Long id) {
+    public CardResponseDto getCard(@PathVariable Long id) {
         return cardService.getCardById(id);
     }
 
     @Operation(summary = "Создание карты")
     @PostMapping
-    public Card createCard(@Valid @RequestBody Card card) {
-        return cardService.createCard(card);
+    public CardResponseDto createCard(@Valid @RequestBody CardRequestDto cardDto) {
+        return cardService.createCard(cardDto);
     }
 
     @Operation(summary = "Обновление карты по id")
     @PatchMapping("/{id}")
-    public Card updateCard(@PathVariable Long id, @Valid @RequestBody Card card) {
-        card.setId(id);
-        return cardService.updateCard(card);
+    public CardResponseDto updateCard(@PathVariable Long id, @Valid @RequestBody CardRequestDto card) {
+        return cardService.updateCard(id, card);
     }
 
     @Operation(summary = "Удаление карты по id")
@@ -63,13 +64,13 @@ public class AdminCardController {
 
     @Operation(summary = "Блокировка карты по id")
     @PatchMapping("/{id}/block")
-    public Card blockCard(@PathVariable Long id) {
+    public CardResponseDto blockCard(@PathVariable Long id) {
         return cardService.blockCard(id);
     }
 
     @Operation(summary = "Активация карты по id")
     @PatchMapping("/{id}/activate")
-    public Card activateCard(@PathVariable Long id) {
+    public CardResponseDto activateCard(@PathVariable Long id) {
         return cardService.activateCard(id);
     }
 }

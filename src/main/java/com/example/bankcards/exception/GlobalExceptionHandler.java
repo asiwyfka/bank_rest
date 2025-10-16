@@ -19,13 +19,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-// --- Глобальный обработчик ---
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // --- Обработка ошибок валидации @Valid ---
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -48,7 +46,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, headers, status);
     }
 
-    // --- Обработка кастомных NotFound исключений ---
     @ExceptionHandler({UserNotFoundException.class, CardNotFoundException.class, RoleNotFoundException.class})
     public ResponseEntity<Map<String, Object>> handleEntityNotFound(RuntimeException ex, HttpServletRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -61,7 +58,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    // --- Ошибки операций с транзакциями и бизнес-логика ---
     @ExceptionHandler(TransactionException.class)
     public ResponseEntity<Map<String, Object>> handleTransactionError(TransactionException ex, HttpServletRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -74,7 +70,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    // --- Обработка IllegalArgumentException и других бизнес-ошибок ---
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -87,7 +82,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    // --- Обработка неверных логина/пароля (401) ---
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -100,7 +94,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
-    // --- Общие ошибки ---
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleAllExceptions(Exception ex, HttpServletRequest request) {
         Map<String, Object> body = new HashMap<>();

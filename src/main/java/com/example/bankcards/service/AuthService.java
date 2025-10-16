@@ -66,7 +66,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return "User registered successfully with role ROLE_USER";
+        return "Пользователь успешно зарегестрирован с ролью ROLE_USER";
     }
 
     /**

@@ -44,7 +44,7 @@ public class UserService {
 
         if (dto.getRoleId() != null) {
             Role role = roleRepository.findById(dto.getRoleId())
-                    .orElseThrow(() -> new RoleNotFoundException("id=" + dto.getRoleId()));
+                    .orElseThrow(() -> new RoleNotFoundException(dto.getRoleId()));
             user.setRole(role);
         }
 
@@ -62,7 +62,7 @@ public class UserService {
         }
         if (dto.getRoleId() != null) {
             Role role = roleRepository.findById(dto.getRoleId())
-                    .orElseThrow(() -> new RoleNotFoundException("id=" + dto.getRoleId()));
+                    .orElseThrow(() -> new RoleNotFoundException(dto.getRoleId()));
             user.setRole(role);
         }
 
