@@ -2,6 +2,8 @@ package com.example.bankcards.controller;
 
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.service.CardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +16,14 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/user/cards")
+@Tag(name = "USER_CARD", description = "Функционал работы пользователей с картами")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
 public class UserCardController {
 
     private final CardService cardService;
 
+    @Operation(summary = "Получения всех своих карт пользователя")
     @GetMapping
     public ResponseEntity<Page<Card>> getUserCards(
             Authentication auth,
@@ -28,12 +32,14 @@ public class UserCardController {
         return ResponseEntity.ok(cardService.getUserCards(auth.getName(), PageRequest.of(page, size)));
     }
 
+    @Operation(summary = "Запрос на блокировку своей карты")
     @PostMapping("/{id}/requestCardBlock")
     public ResponseEntity<?> requestCardBlock(@PathVariable Long id, Authentication auth) {
         cardService.requestCardBlock(id, auth.getName());
         return ResponseEntity.ok("Сard blocking request sent");
     }
 
+    @Operation(summary = "Перевод денежных средств с одной своей карты на другую свою карту")
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(
             Authentication auth,
@@ -44,6 +50,7 @@ public class UserCardController {
         return ResponseEntity.ok("Transfer completed successfully");
     }
 
+    @Operation(summary = "Получения баланса своей карты")
     @GetMapping("/{id}/balance")
     public ResponseEntity<BigDecimal> getBalance(@PathVariable Long id, Authentication auth) {
         return ResponseEntity.ok(cardService.getCardBalance(id, auth.getName()));
