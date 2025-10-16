@@ -103,14 +103,15 @@
 
 8. Далее пробуем все admin операции по очереди в AdminCardController.
 
-get метод по адресу возвращает все карты: http://localhost:8080/admin/cards
-get метод по адресу ищет определенную карту: http://localhost:8080/admin/cards/1
+* get метод по адресу возвращает все карты: http://localhost:8080/admin/cards
+
+* get метод по адресу ищет определенную карту: http://localhost:8080/admin/cards/1
 
 Обращаем внимание, что в ответе у нас возвращается maskedNumber с видимыми последними 4 цифрами.
 
 ![Ответ по карте с маской](https://github.com/user-attachments/assets/335b4287-6cc1-443e-a74a-632b5863b927)
 
-patch метод по адресу обновляет данные по определенной карте: http://localhost:8080/admin/cards/3
+* patch метод по адресу обновляет данные по определенной карте: http://localhost:8080/admin/cards/3
 
 Тело:
 {
@@ -123,18 +124,20 @@ patch метод по адресу обновляет данные по опре
   "balance": 0.00
 }
 
-patch метод по адресу блокирует определенную карту: http://localhost:8080/admin/cards/3/block
-patch метод по адресу активирует определенную карту: http://localhost:8080/admin/cards/3/activate
-delete метод по адресу удаляет определенную карту: http://localhost:8080/admin/cards/3
+* patch метод по адресу блокирует определенную карту: http://localhost:8080/admin/cards/3/block
+
+* patch метод по адресу активирует определенную карту: http://localhost:8080/admin/cards/3/activate
+
+* delete метод по адресу удаляет определенную карту: http://localhost:8080/admin/cards/3
 
 БД после тестирования по AdminCardController
 ![БД после тестирования по AdminCardController](https://github.com/user-attachments/assets/72724863-59f1-4c7c-8192-9f05afeedfb0)
 
 9. Далее пробуем все admin операции по очереди в AdminUserController.
 
-get метод по адресу возвращает всех юзеров: http://localhost:8080/admin/users
-get метод по адресу возвращает определенного юзера: http://localhost:8080/admin/users/4
-patch метод по адресу возвращает определенного юзера: http://localhost:8080/admin/users/4
+* get метод по адресу возвращает всех юзеров: http://localhost:8080/admin/users
+* get метод по адресу возвращает определенного юзера: http://localhost:8080/admin/users/4
+* patch метод по адресу возвращает определенного юзера: http://localhost:8080/admin/users/4
 
 Тело:
 {
@@ -146,7 +149,7 @@ patch метод по адресу возвращает определенног
   }
 }
 
-delete метод по адресу удаляет определенного юзера: http://localhost:8080/admin/users/4
+* delete метод по адресу удаляет определенного юзера: http://localhost:8080/admin/users/4
 
 БД после тестирования по AdminUserController
 ![БД после тестирования по AdminUserController](https://github.com/user-attachments/assets/e9cbf683-6a3c-4a36-953a-e276b152151d)
@@ -159,10 +162,10 @@ delete метод по адресу удаляет определенного ю
     "password": "password1"
 }
 
-get метод по адресу возвращает все карты авторизованного юзера: http://localhost:8080/user/cards
-get метод по адресу возвращает баланс определенной карты авторизованного юзера: http://localhost:8080/user/cards/1/balance
-post метод по адресу переводит средства с собственной карты на другую свою карту авторизованного юзера: http://localhost:8080/user/cards/transfer?fromCardId=2&toCardId=1&amount=1500.5
-post метод по адресу делает запрос на блокировку карты авторизованного юзера: http://localhost:8080/user/cards/2/requestCardBlock
+* get метод по адресу возвращает все карты авторизованного юзера: http://localhost:8080/user/cards
+* get метод по адресу возвращает баланс определенной карты авторизованного юзера: http://localhost:8080/user/cards/1/balance
+* post метод по адресу переводит средства с собственной карты на другую свою карту авторизованного юзера: http://localhost:8080/user/cards/transfer?fromCardId=2&toCardId=1&amount=1500.5
+* post метод по адресу делает запрос на блокировку карты авторизованного юзера: http://localhost:8080/user/cards/2/requestCardBlock
 
 БД после тестирования по UserCardController
 ![БД после тестирования по UserCardController](https://github.com/user-attachments/assets/8dbbcd32-a17f-4a30-b77e-ae42ca9e5615)
