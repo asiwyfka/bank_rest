@@ -51,9 +51,7 @@
   "username": "user2",
   "password": "userpass2",
   "email": "user2@example.com",
-  "role": {
-    "id": 1
-  }
+  "roleId": 1
 }
 
 Тело:
@@ -61,9 +59,7 @@
   "username": "user3",
   "password": "userpass3",
   "email": "user3@example.com",
-  "role": {
-    "id": 1
-  }
+  "roleId": 1
 }
 
 7. За admin создаем 3 карты для нашего первого пользователя, которого мы сами регистрировали. post http://localhost:8080/admin/cards
@@ -71,33 +67,24 @@
 Тело:
 {
   "cardNumber": "1234567812345678",
-  "owner": {
-    "id": 2
-  },
+  "ownerId": 2,
   "expiryDate": "2028-10-15",
-  "status": "ACTIVE",
-  "balance": 1000.00
+  "balance": 1000
 }
 
 Тело:
 {
   "cardNumber": "5555666677778888",
-  "owner": {
-    "id": 2
-  },
-  "expiryDate": "2029-03-01",
-  "status": "ACTIVE",
+  "ownerId": 2,
+  "expiryDate": "2029-03-01"
   "balance": 2500.50
 }
 
 Тело:
 {
   "cardNumber": "9999000011112222",
-  "owner": {
-    "id": 2
-  },
+  "ownerId": 2,
   "expiryDate": "2030-07-20",
-  "status": "ACTIVE",
   "balance": 0.00
 }
 
@@ -116,11 +103,8 @@
 Тело:
 {
   "cardNumber": "9999000011112222",
-  "owner": {
-    "id": 2
-  },
+  "ownerId": 2,
   "expiryDate": "9999-07-20",
-  "status": "ACTIVE",
   "balance": 0.00
 }
 
@@ -137,16 +121,14 @@
 
 * get метод по адресу возвращает всех юзеров: http://localhost:8080/admin/users
 * get метод по адресу возвращает определенного юзера: http://localhost:8080/admin/users/4
-* patch метод по адресу возвращает определенного юзера: http://localhost:8080/admin/users/4
+* patch метод по адресу обновляет определенного юзера: http://localhost:8080/admin/users/4
 
 Тело:
 {
   "username": "user3",
   "password": "userpass3",
   "email": "user3@example.com",
-  "role": {
-    "id": 1
-  }
+  "roleId": 1
 }
 
 * delete метод по адресу удаляет определенного юзера: http://localhost:8080/admin/users/4
