@@ -1,4 +1,5 @@
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\BankRestApplication.java
+C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\config\OpenApiConfig.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\config\SecurityConfig.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\controller\AdminCardController.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\controller\AdminUserController.java
@@ -11,7 +12,6 @@ C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity\RoleName.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity\Transaction.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\entity\User.java
-C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\PasswordHasher.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\repository\CardRepository.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\repository\RoleRepository.java
 C:\Users\avdey\IdeaProjects\bank_rest\src\main\java\com\example\bankcards\repository\TransactionRepository.java

@@ -3,6 +3,7 @@ package com.example.bankcards.controller;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.service.CardService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 @Tag(name = "USER_CARD", description = "Функционал работы пользователей с картами")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
+@SecurityRequirement(name = "bearerAuth")
 public class UserCardController {
 
     private final CardService cardService;
